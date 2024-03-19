@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            background-color: black;
+        }
+
+        .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        
+
+        .item {
+            margin-bottom: 1em;
+        }
+
+        input {
+        
+        background-color: aliceblue;
+            height: 2em;
+            width: 8em;
+        }
+
+        button {
+            height: 2rem;
+            width: 7em;
+            color: rgb(14, 233, 61);
+            background-color: rgb(68, 69, 69);
+            margin-bottom: 4em;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="backgr">
+
+        <div class="container">
+            <header>
+                <form id="search-form">
+                    <input id="search-input" type="text" placeholder="search">
+                    <button type="submit">Search</button>
+                    <button type="trending">trending</button>
+                    <button type="emoji">emoji</button>
+                </form>
+            </header>
+        </div>
+        <div id="results" class="results">
+            <!-- gif image here -->
+        </div>
+        <div id="def" class="def">
+        </div>
+    </div>
+
+    <script>
+        const searchForm = document.getElementById('search-form')
+        const searchInput = document.getElementById('search-input')
+        const resultsEl = document.getElementById('results')
+        const def = document.getElementById('def')
+        const apikey = 'V1cuwZJZUHB4RgZ0faCXazNBh3xRdRPh'
+
+
+        searchForm.addEventListener('submit', function (e) {
+            e.preventDefault()
+            const q = searchInput.value
+            const path = `https://api.giphy.com/v1/gifs/search?api_key=${apikey}&q=${q}`
+            search(path)
+        })
+        searchForm.addEventListener('submit', function (e) {
+            e.preventDefault()
+            const path = `https://api.giphy.com/v1/gifs/trending?api_key=QfX6JLuzNiiy8F57FydGoIYSxFyYUWkz&limit=25&offset=0&rating=g&bundle=messaging_non_clips
+
+`
+            search(path)
+        })
+        searchForm.addEventListener('submit', function (e) {
+            e.preventDefault()
+            const path = `https://api.giphy.com/v2/emoji?api_key=V1cuwZJZUHB4RgZ0faCXazNBh3xRdRPh&limit=10&offset=0
+
+`
+            search(path)
+        })
+
+        function search(path) {
+            fetch(path).then(function (res) {
+                return res.json()
+            }).then(function (json) {
+                let resultsHTML = ''
+                json.data.forEach(function (obj) {
+                    const url = obj.images.fixed_width.url
+                    resultsHTML += `<img  class="item" src="${url}" alt="not found">`
+                })
+                def.innerHTML = ''
+                resultsEl.innerHTML = resultsHTML
+            }).catch(function (err) {
+                console.log(err.message)
+            })
+        }
+
+        const d = 'trending'
+        const pat = `https://api.giphy.com/v1/gifs/search?api_key=${apikey}&q=${d}`
+
+        fetch(pat).then(function (def) {
+            return def.json()
+        }).then(function (json) {
+
+            let defHTML = ''
+            json.data.forEach(function (obj) {
+                const url = obj.images.fixed_width.url
+                defHTML += `<img  class="item" src="${url}"alt="not found">`
+            })
+            def.innerHTML = defHTML
+        }).catch(function (err) {
+            console.log(err.message)
+        })
+    </script>
+</body>
+</html>
